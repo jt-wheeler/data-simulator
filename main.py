@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import datetime
 import argparse
+import uuid
 
 def simulate_data():
 
@@ -12,12 +13,14 @@ def simulate_data():
     column_2 = np.random.uniform(low=0, high=100, size=number_of_records)
     column_3 = np.random.logistic(loc=50, size=number_of_records)
     column_4 = np.random.binomial(10, 0.5, number_of_records)
+    column_5 = [str(uuid.uuid4()) for _ in range(0, number_of_records)]
 
     data_with_column_names = {
         'A': column_1,
         'B': column_2,
         'C': column_3,
         'D': column_4,
+        'E': column_5
     }
 
     return pd.DataFrame(data_with_column_names)
