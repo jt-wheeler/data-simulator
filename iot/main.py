@@ -23,7 +23,8 @@ async def main(host_name, device_id, shared_access_key, interval):
 
 
 async def send_message(connection_string):
-    device_client = IoTHubDeviceClient.create_from_connection_string(connection_string)
+    device_client = IoTHubDeviceClient.create_from_connection_string(
+        connection_string)
 
     await device_client.connect()
 
@@ -58,17 +59,24 @@ def random_string(max_length):
 
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        format='%(asctime)s:%(name)s:%(levelname)s:%(message)s', level=logging.INFO)
 
     parser = argparse.ArgumentParser(description='IoT device simulator.')
     parser.add_argument('--host_name', help='IoT Hub host name')
     parser.add_argument('--device_id', help='IoT Hub Device ID')
     parser.add_argument('--shared_access_key',
                         help='IoT Hub Shared access key.')
-    parser.add_argument('--interval', help='Interval at which messages should be transmitted in seconds.',
+    parser.add_argument('--interval', help='Interval at which messages should be transmitted in seconds. If not provided, will only send one message and exit.',
                         default=0)
+    parser.add_argument('--log_file',
+                        default=None,
+                        help='File to write log messages to. Messages will be written to the console if this arg is not provided.')
     args = parser.parse_args()
+
+    logging.basicConfig(
+        format='%(asctime)s:%(name)s:%(levelname)s:%(message)s',
+        level=logging.INFO,
+        filename=args.log_file
+    )
 
     host_name = args.host_name
     device_id = args.device_id
