@@ -18,15 +18,16 @@ async def main(host_name, device_id, shared_access_key, interval):
 
     await device_client.connect()
 
-    for _ in range(0, 10):
-        message = create_random_message()
-        logging.info(message)
-        logging.info("Sending message...")
-        await device_client.send_message(message)
-        logging.info("Message successfully sent!")
-        time.sleep(interval)
-
-    await device_client.disconnect()
+    try:
+        while True:
+            message = create_random_message()
+            logging.info(message)
+            logging.info("Sending message...")
+            await device_client.send_message(message)
+            logging.info("Message successfully sent!")
+            time.sleep(interval)
+    finally:
+        await device_client.disconnect()
 
 
 def create_random_message():
@@ -65,7 +66,7 @@ if __name__ == "__main__":
     host_name = args.host_name
     device_id = args.device_id
     shared_access_key = args.shared_access_key
-    interval = args.interval
+    interval = int(args.interval)
 
     loop = asyncio.get_event_loop()
     loop.run_until_complete(
