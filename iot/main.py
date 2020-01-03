@@ -11,21 +11,28 @@ import json
 
 
 async def main(host_name, device_id, shared_access_key, interval):
-    conn_str = 'HostName={};DeviceId={};SharedAccessKey={}'.format(
+    connection_string = 'HostName={};DeviceId={};SharedAccessKey={}'.format(
         host_name, device_id, shared_access_key)
 
-    device_client = IoTHubDeviceClient.create_from_connection_string(conn_str)
+    if interval > 0:
+        while True:
+            await send_message(connection_string)
+            time.sleep(interval)
+    else:
+        await send_message(connection_string)
+
+
+async def send_message(connection_string):
+    device_client = IoTHubDeviceClient.create_from_connection_string(connection_string)
 
     await device_client.connect()
 
     try:
-        while True:
-            message = create_random_message()
-            logging.info(message)
-            logging.info("Sending message...")
-            await device_client.send_message(message)
-            logging.info("Message successfully sent!")
-            time.sleep(interval)
+        message = create_random_message()
+        logging.info(message)
+        logging.info("Sending message...")
+        await device_client.send_message(message)
+        logging.info("Message successfully sent!")
     finally:
         await device_client.disconnect()
 
@@ -60,7 +67,7 @@ if __name__ == "__main__":
     parser.add_argument('--shared_access_key',
                         help='IoT Hub Shared access key.')
     parser.add_argument('--interval', help='Interval at which messages should be transmitted in seconds.',
-                        default=1)
+                        default=0)
     args = parser.parse_args()
 
     host_name = args.host_name
