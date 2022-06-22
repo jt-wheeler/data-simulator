@@ -8,7 +8,7 @@ isort==4.3.21
 janus==0.4.0
 lazy-object-proxy==1.4.3
 mccabe==0.6.1
-numpy==1.17.4
+numpy==1.22.0
 paho-mqtt==1.5.0
 pandas==0.25.3
 pycodestyle==2.5.0
